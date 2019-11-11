@@ -56,6 +56,12 @@ def legalMove(board, move):
 def makeMove(board, char, move):
     board[move] = char
 
+def isBoardFull(board):
+    for space in board:
+        if(space == ' '):
+            return False
+    return True
+
 # Checks to see if the player has won
 def checkWinner(board, char):
     return((board[0] == char and board[1] == char and board[2] == char) or
@@ -89,12 +95,12 @@ playerTurn = setPlayerOrder()
 
 #==================== GAME LOOP ====================#
 # Board Variables and Instantiation
-noWinner = True
+gameOver = False
 gameBoard = [' '] * 9
 drawBoard(gameBoard)
 
 # The game will loop until there is a winner
-while(noWinner):
+while(not gameOver):
     if(playerTurn):
         # Get the index of the player's intended move
         moveIndex = getPlayerMove(gameBoard)
@@ -109,7 +115,7 @@ while(noWinner):
         #Check to see if the player has won the game
         if(checkWinner(gameBoard, playerChar)):
             print("You Win!")
-            noWinner = False
+            gameOver = True
 
     # The computer's turn
     else:
@@ -127,7 +133,13 @@ while(noWinner):
         # Check if the computer has won the game
         if(checkWinner(gameBoard, compChar)):
             print("The Computer Wins!")
-            noWinner = False
+            gameOver = True
+            
+    if(not gameOver):
+        if(isBoardFull(gameBoard)):
+            print("There are no more possible moves!")
+            print("You have tied.")
+            gameOver = True
 
 
 

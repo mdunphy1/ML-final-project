@@ -1,5 +1,3 @@
-import numpy as np
-
 def drawBoard(board):
     print('   |   |')
     print(' ' + board[0] + ' | ' + board[1] + ' | ' + board[2])
@@ -91,12 +89,11 @@ for i in range(0,3,1):
                                         num = numSpacesFilled(gameBoard)
                                         counts[num] += 1
 
-drawBoard(states[1000])
-
 for i in range(0, len(counts), 1):
     print("Number of combinations with ", i, "spaces filled: ", counts[i])
 print(count)
 
+drawBoard(states[1000])
 '''
 for i in range(0, 100, 1):
     drawBoard(states[i])

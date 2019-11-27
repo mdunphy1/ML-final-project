@@ -107,6 +107,11 @@ def getMove(board, rewards, exp):
         move = highIndexes[randrange(len(highIndexes))]
     return move
 
+def getRanMove(board):
+    possibleMoves = availableMoves(board)
+    move = possibleMoves[randrange(len(possibleMoves))]
+    return move
+
 # Returns array of indexes of open spaces
 def availableMoves(board):
     available = []
@@ -150,7 +155,7 @@ def determineWinner(state):
     else:
         return 0
 
-def playGame(states, rewards, exp):
+def playGame(states, rewards, exp, two):
     # Set the computers' characters
     comp1Char = 'X'
     comp2Char = 'O'
@@ -190,7 +195,10 @@ def playGame(states, rewards, exp):
         # The computer's turn
         else:
             # Get the index of the computer's intended move
-            moveIndex = getMove(gameBoard, rewards[getStateIndex(gameBoard, states)], exp)
+            if(two):
+                moveIndex = getMove(gameBoard, rewards[getStateIndex(gameBoard, states)], exp)
+            else:
+                moveIndex = getRanMove(gameBoard)
             moves.append(moveIndex)
 
             # Update the board with the player's intended move
@@ -224,14 +232,14 @@ def updateRewards(rewards, indexes, moves, winner):
             elif(winner == 2):
                 rewards[indexes[moveNum]][moves[moveNum]] -= 1
             else:
-                rewards[indexes[moveNum]][moves[moveNum]] -= 0
+                rewards[indexes[moveNum]][moves[moveNum]] += .1
         else:
             if(winner == 1):
                 rewards[indexes[moveNum]][moves[moveNum]] -= 1
             elif(winner == 2):
                 rewards[indexes[moveNum]][moves[moveNum]] += 1
             else:
-                rewards[indexes[moveNum]][moves[moveNum]] -= 0
+                rewards[indexes[moveNum]][moves[moveNum]] += .1
         
                 
 #================= INTRO AND SETUP =================#
@@ -246,13 +254,11 @@ c1Wins = 0
 c2Wins = 0
 ties = 0
 
-print(getStateIndex([' ', ' ', 'O', ' ', 'X', 'O', 'X', ' ', ' '], states))
-
-numGames = 200000
+numGames = 50000
 for i in range(0, numGames, 1):
     if(i % 1000 == 0):
         print(i, "games played so far")
-    twoArrs = playGame(states, rewards, 30)
+    twoArrs = playGame(states, rewards, 30, True)
     gameIndexes = twoArrs[0]
     moves = twoArrs[1]
 
@@ -260,13 +266,6 @@ for i in range(0, numGames, 1):
     winner = determineWinner(states[endIndex])
 
     updateRewards(rewards, gameIndexes, moves, winner)
-    '''
-    print("Game number: ", i)
-    print(gameIndexes)
-    print(moves)
-    print(rewards[0])
-    print()
-    '''
     
     if(winner == 1):
         c1Wins += 1
@@ -274,19 +273,17 @@ for i in range(0, numGames, 1):
         c2Wins += 1
     else:
         ties += 1
-
 print()
 print(rewards[0])
-print(rewards[57])
-print(rewards[577])
 print("Computer 1 won the game ", (c1Wins/numGames)*100, "% of the time")
 print("Computer 2 won the game ", (c2Wins/numGames)*100, "% of the time")
 print("The computers tied ", (ties/numGames)*100, "% of the time")
 print()
 
+'''
 numGames2 = 1
 for i in range(0, numGames2, 1):
-    twoArrs = playGame(states, rewards, 0)
+    twoArrs = playGame(states, rewards, 0, True)
     gameIndexes = twoArrs[0]
     moves = twoArrs[1]
 
@@ -299,4 +296,4 @@ for i in range(0, numGames2, 1):
         drawBoard(states[index])
         print(rewards[index])
         print()
-    
+'''   
